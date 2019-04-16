@@ -1,0 +1,43 @@
+---
+- name: Upload SSH banner
+  copy:
+    src: "{{ openssh_banner }}"
+    dest: /etc/issue.net
+    owner: root
+    group: root
+    mode: 0644
+  when: openssh_banner is defined and openssh_banner
+
+- name: Security hardening for OpenSSH server
+  lineinfile:
+    dest: "{{ openssh_config_path }}"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    validate: "/usr/sbin/sshd -T -f %s"
+  loop:
+    - regexp: "^PasswordAuthentication"
+      line: "PasswordAuthentication {{ openssh_password_authentication }}"
+    - regexp: "^PermitRootLogin"
+      line: "PermitRootLogin {{ openssh_permit_root_login }}"
+    - regexp: "^Port"
+      line: "Port {{ openssh_port }}"
+    - regexp: "^UseDNS"
+      line: "UseDNS {{ openssh_usedns }}"
+    - regexp: "^PermitEmptyPasswords"
+      line: "PermitEmptyPasswords {{ openssh_permit_empty_passwords }}"
+    - regexp: "^ChallengeResponseAuthentication"
+      line: "ChallengeResponseAuthentication {{ openssh_challenge_response_auth }}"
+    - regexp: "^GSSAPIAuthentication"
+      line: "GSSAPIAuthentication {{ openssh_gss_api_authentication }}"
+    - regexp: "^Banner"
+      line: "Banner /etc/issue.net"
+    - regexp: "^X11Forwarding"
+      line: "X11Forwarding {{ openssh_x11_forwarding }}"
+    - regexp: "^KexAlgorithms"
+      line: "KexAlgorithms {{ openssh_kexalgorithms }}"
+    - regexp: "^MACs"
+      line: "MACs {{ openssh_macs }}"
+    - regexp: "^Ciphers"
+      line: "Ciphers {{ openssh_ciphers }}"
+  notify: restart openssh
