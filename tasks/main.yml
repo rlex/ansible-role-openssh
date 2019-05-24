@@ -30,8 +30,6 @@
       line: "ChallengeResponseAuthentication {{ openssh_challenge_response_auth }}"
     - regexp: "^GSSAPIAuthentication"
       line: "GSSAPIAuthentication {{ openssh_gss_api_authentication }}"
-    - regexp: "^Banner"
-      line: "Banner /etc/issue.net"
     - regexp: "^X11Forwarding"
       line: "X11Forwarding {{ openssh_x11_forwarding }}"
     - regexp: "^KexAlgorithms"
@@ -40,4 +38,7 @@
       line: "MACs {{ openssh_macs }}"
     - regexp: "^Ciphers"
       line: "Ciphers {{ openssh_ciphers }}"
+    - regexp: "^Banner"
+      line: "Banner /etc/issue.net"
+      when: openssh_banner is defined and openssh_banner
   notify: restart openssh
