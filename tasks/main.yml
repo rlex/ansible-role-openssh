@@ -1,16 +1,16 @@
 ---
 - name: Upload SSH banner
-  copy:
+  ansible.builtin.copy:
     src: "{{ openssh_banner }}"
     dest: /etc/issue.net
     owner: root
     group: root
-    mode: 0644
+    mode: '0644'
   when: openssh_banner is defined and openssh_banner
 
 - name: Security hardening for OpenSSH server
-  lineinfile:
-    dest: "{{ openssh_config_path }}"
+  ansible.builtin.lineinfile:
+    path: "{{ openssh_config_path }}"
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
     state: present
@@ -41,4 +41,4 @@
     - regexp: "^Banner"
       line: "Banner /etc/issue.net"
       when: openssh_banner is defined and openssh_banner
-  notify: restart openssh
+  notify: Restart openssh

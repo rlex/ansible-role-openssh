@@ -1,5 +1,5 @@
-- name: "restart openssh"
-  service:
-    name:  "{{ openssh_daemon_name }}"
+- name: Restart openssh
+  ansible.builtin.service:
+    name: "{{ openssh_daemon_name }}"
     state: restarted
-    enabled: yes
+    enabled: true
